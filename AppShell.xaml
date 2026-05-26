@@ -8,9 +8,35 @@
     Title="SemilleroGR3">
 
     <ShellContent
-  Title="Progreso"
-    Icon="dotnet_bot.png"
-    Route="ProgresoView"
-    ContentTemplate="{DataTemplate views:ProgresoView}"/>
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginView}"
+        Route="Login"
+        Shell.NavBarIsVisible="False"
+        Shell.FlyoutItemIsVisible="False"
+        Shell.TabBarIsVisible="False" />
+
+    <TabBar Route="Dashboard">
+
+        <Tab Title="Inicio" Icon="pinguino_tejido.png">
+            <ShellContent ContentTemplate="{DataTemplate views:DashboardView}" />
+        </Tab>
+
+        <Tab Title="Seguimiento" Icon="dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:SeguimientoView}" />
+        </Tab>
+
+        <Tab Title="Historial" Icon="dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:HistorialView}" />
+        </Tab>
+
+        <Tab Title="Tareas" Icon="dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:TareasCasaView}" />
+        </Tab>
+
+        <Tab Title="Progreso" Icon="dotnet_bot.png" Route="ProgresoView">
+            <ShellContent ContentTemplate="{DataTemplate views:ProgresoView}" />
+        </Tab>
+
+    </TabBar>
 
 </Shell>
