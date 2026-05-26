@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:SemilleroGR3.ViewModels"
+             xmlns:controls="clr-namespace:SemilleroGR3.Controls"
+             xmlns:helpers="clr-namespace:SemilleroGR3.Helpers"
+             x:Class="SemilleroGR3.Views.ProgresoView"
+             Title="Progreso de mi Hijo/a">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helpers:StatusColorConverter x:Key="ColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *" Padding="10">
+
+        <Label Grid.Row="0" 
+               Text="Rúbrica Cognitiva" 
+               FontSize="22" 
+               FontAttributes="Bold" 
+               TextColor="#4A4A4A" 
+               Margin="10,10,10,20"/>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Criterios}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <controls:CrochetBorderFrame>
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="{Binding NombreCriterio}" 
+                                   FontSize="18" FontAttributes="Bold" />
+
+                            <Ellipse Grid.Row="0" Grid.Column="1" 
+                                     WidthRequest="24" HeightRequest="24" 
+                                     Fill="{Binding CodigoLogro, Converter={StaticResource ColorConverter}}" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                   Text="{Binding Observacion}" 
+                                   FontSize="14" TextColor="DimGray" 
+                                   Margin="0,10,0,0" />
+                        </Grid>
+                    </controls:CrochetBorderFrame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
