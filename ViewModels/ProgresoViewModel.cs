@@ -1,63 +1,77 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
-using SemilleroGR3.Models;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
+using SemilleroGR3.Models;
+using SemilleroGR3.Services;
 
 namespace SemilleroGR3.ViewModels
 {
-    // Heredar de ObservableObject nos da la magia de MVVM sin código extra
     public partial class ProgresoViewModel : ObservableObject
     {
-        // Esta colección guardará la lista de criterios que mostraremos en la pantalla
+        private readonly FamiliaService _familiaService;
+
         [ObservableProperty]
         private ObservableCollection<CriterioEvaluacionDto> criterios;
 
         [ObservableProperty]
         private bool isBusy;
 
-        public ProgresoViewModel()
+        // 1. Inyectamos el servicio en el constructor
+        public ProgresoViewModel(FamiliaService familiaService)
         {
-            // Inicializamos la colección vacía
+            _familiaService = familiaService;
             Criterios = new ObservableCollection<CriterioEvaluacionDto>();
 
-            // Para poder probar la interfaz antes de tener la API,
-            // podemos cargar datos falsos (mock data) temporalmente.
-            CargarDatosDePrueba();
+            // 2. Escuchamos si el padre cambia de hijo en el Dashboard
+            WeakReferenceMessenger.Default.Register<CambiarHijoMessage>(this, (r, m) =>
+            {
+                _ = CargarProgresoAsync(m.NuevoId);
+            });
+
+            // 3. Hacemos una carga inicial automática
+            _ = CargarProgresoAsync();
         }
 
-        private void CargarDatosDePrueba()
+        public async Task CargarProgresoAsync(int? alumnoId = null)
         {
-            IsBusy = true;
+            if (IsBusy) return;
 
-            // Simulamos lo que llegaría de SQL Server (Tablas CriterioCognitivo y NivelLogro)
-            Criterios.Add(new CriterioEvaluacionDto
+            try
             {
-                CriterioId = 1,
-                NombreCriterio = "Clasificación",
-                DescripcionCriterio = "Agrupa objetos por igualdad y semejanza.",
-                CodigoLogro = "L", // Logrado (Se pintará verde)
-                Observacion = "Logra clasificar personas seguras y peligrosas con facilidad."
-            });
+                IsBusy = true;
 
-            Criterios.Add(new CriterioEvaluacionDto
+                // Leemos el ID que pasaron por parámetro o el que guardó el Dashboard
+                int idBusqueda = alumnoId ?? Preferences.Get("HijoActivoId", 0);
+
+                if (idBusqueda > 0)
+                {
+                    // Llamamos a la API real a través de tu servicio
+                    var lista = await _familiaService.GetProgresoHijoAsync(idBusqueda);
+
+                    // Actualizamos la interfaz gráfica de forma segura en el hilo principal
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        Criterios.Clear();
+                        foreach (var item in lista)
+                        {
+                            Criterios.Add(item);
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                CriterioId = 2,
-                NombreCriterio = "Seriación",
-                DescripcionCriterio = "Identifica el orden lógico de los eventos.",
-                CodigoLogro = "EP", // En Proceso (Se pintará amarillo)
-                Observacion = "Organiza secuencias simples pero se confunde con más de 4 pasos."
-            });
-
-            Criterios.Add(new CriterioEvaluacionDto
+                // Si la API falla o no hay internet, podemos verlo en la consola
+                System.Diagnostics.Debug.WriteLine($"Error al cargar el progreso cognitivo: {ex.Message}");
+            }
+            finally
             {
-                CriterioId = 3,
-                NombreCriterio = "Pensamiento Lógico",
-                DescripcionCriterio = "Justifica sus decisiones.",
-                CodigoLogro = "EP", // Iniciado (Se pintará rojo/rosa)
-                Observacion = "Aún no logra explicar por qué una acción es segura."
-            });
-
-            IsBusy = false;
+                IsBusy = false;
+            }
         }
     }
 }

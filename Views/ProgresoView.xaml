@@ -1,49 +1,90 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:SemilleroGR3.ViewModels"
              xmlns:controls="clr-namespace:SemilleroGR3.Controls"
              xmlns:helpers="clr-namespace:SemilleroGR3.Helpers"
              x:Class="SemilleroGR3.Views.ProgresoView"
-             Title="Progreso de mi Hijo/a">
+             Title="Rubrica de calificación">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <helpers:StatusColorConverter x:Key="ColorConverter" />
+            <helpers:StatusColorConverter x:Key="StatusColorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto, *" Padding="10">
+    <Grid RowDefinitions="Auto, Auto, *">
 
-        <Label Grid.Row="0" 
-               Text="Rúbrica Cognitiva" 
-               FontSize="22" 
-               FontAttributes="Bold" 
-               TextColor="#4A4A4A" 
-               Margin="10,10,10,20"/>
+        <VerticalStackLayout Grid.Row="1" Margin="15,8,15,10" Spacing="5">
+          
+            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Center">
 
-        <CollectionView Grid.Row="1" ItemsSource="{Binding Criterios}">
+                <HorizontalStackLayout Spacing="4" Margin="0,0,15,5">
+                    <Ellipse Fill="#BDBDBD" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                    <Label Text="Iniciado" FontSize="12" TextColor="#666666" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="4" Margin="0,0,15,5">
+                    <Ellipse Fill="#FFCA28" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                    <Label Text="En Proceso" FontSize="12" TextColor="#666666" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="4" Margin="0,0,15,5">
+                    <Ellipse Fill="#66BB6A" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                    <Label Text="Logrado" FontSize="12" TextColor="#666666" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="4" Margin="0,0,15,5">
+                    <Path Data="M 12 2 L 15.09 8.26 L 22 9.27 L 17 14.14 L 18.18 21.02 L 12 17.77 L 5.82 21.02 L 7 14.14 L 2 9.27 L 8.91 8.26 Z" 
+                          Fill="#FFD700" Aspect="Uniform" WidthRequest="14" HeightRequest="14" VerticalOptions="Center"/>
+                    <Label Text="Destacado" FontSize="12" TextColor="#666666" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+            </FlexLayout>
+        </VerticalStackLayout>
+
+        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="Center" Color="#FFCA28" ZIndex="1"/>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Criterios}" Margin="10,0,10,10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <controls:CrochetBorderFrame>
-                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                        <Grid ColumnDefinitions="*, Auto">
 
-                            <Label Grid.Row="0" Grid.Column="0" 
-                                   Text="{Binding NombreCriterio}" 
-                                   FontSize="18" FontAttributes="Bold" />
+                            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="2" Padding="0,2">
+                                <Label Text="{Binding NombreCriterio}" FontAttributes="Bold" FontSize="16" TextColor="#333333"/>
+                                <Label Text="{Binding Observacion}" FontSize="13" TextColor="#555555" LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
 
-                            <Ellipse Grid.Row="0" Grid.Column="1" 
-                                     WidthRequest="24" HeightRequest="24" 
-                                     Fill="{Binding CodigoLogro, Converter={StaticResource ColorConverter}}" />
+                            <Grid Grid.Column="1" VerticalOptions="Center" HorizontalOptions="End" Margin="10,0,0,0">
 
-                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                                   Text="{Binding Observacion}" 
-                                   FontSize="14" TextColor="DimGray" 
-                                   Margin="0,10,0,0" />
+                                <Ellipse Fill="{Binding CodigoLogro, Converter={StaticResource StatusColorConverter}}" 
+                                         WidthRequest="22" HeightRequest="22">
+                                    <Ellipse.Triggers>
+                                        <DataTrigger TargetType="Ellipse" Binding="{Binding CodigoLogro}" Value="DL">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+
+                                <Path Data="M 12 2 L 15.09 8.26 L 22 9.27 L 17 14.14 L 18.18 21.02 L 12 17.77 L 5.82 21.02 L 7 14.14 L 2 9.27 L 8.91 8.26 Z" 
+                                      Fill="#FFD700" 
+                                      Aspect="Uniform" 
+                                      WidthRequest="28" HeightRequest="28"
+                                      IsVisible="False">
+                                    <Path.Triggers>
+                                        <DataTrigger TargetType="Path" Binding="{Binding CodigoLogro}" Value="DL">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Path.Triggers>
+                                </Path>
+
+                            </Grid>
+
                         </Grid>
                     </controls:CrochetBorderFrame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
     </Grid>
 </ContentPage>

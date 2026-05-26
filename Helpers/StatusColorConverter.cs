@@ -9,24 +9,20 @@ namespace SemilleroGR3.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string codigoLogro)
-            {
-                // Evaluamos los códigos definidos en la base de datos (Tabla NivelLogro)
-                return codigoLogro.ToUpper() switch
-                {
-                    "1" => Colors.LightPink,  // Iniciado (Borde rojo/rosa)
-                    "EP" => Colors.Khaki,     // En Proceso (Borde amarillo)
-                    "L" => Colors.LightGreen, // Logrado (Borde verde)
-                    _ => Colors.LightGray     // Por defecto o sin evaluar
-                };
-            }
+            var codigo = value?.ToString()?.ToUpper();
 
-            return Colors.LightGray;
+            return codigo switch
+            {
+                "I" => Color.FromArgb("#BDBDBD"),  // Iniciado: Gris
+                "EP" => Color.FromArgb("#FFCA28"), // En Proceso: Amarillo cálido
+                "L" => Color.FromArgb("#66BB6A"),  // Logrado: Verde
+                "DL" => Color.FromArgb("#FFD700"), // Destacado: Dorado
+                _ => Color.FromArgb("#E0E0E0")     // Gris claro por defecto
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            // Como la vista de la familia es de solo lectura, no necesitamos convertir de UI a Datos
             throw new NotImplementedException();
         }
     }

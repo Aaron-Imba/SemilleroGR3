@@ -27,6 +27,26 @@ namespace SemilleroGR3.ViewModels
             Hijos = new ObservableCollection<Alumno>();
         }
 
+        //public async Task CargarHijosAsync()
+        //{
+        //    // Asumimos que guardamos el FamiliaId al hacer login
+        //    var familiaIdStr = await SecureStorage.Default.GetAsync("usuario_id");
+        //    if (int.TryParse(familiaIdStr, out int familiaId))
+        //    {
+        //        var lista = await _familiaService.GetHijosAsync(familiaId);
+        //        Hijos.Clear();
+        //        foreach (var hijo in lista)
+        //        {
+        //            Hijos.Add(hijo);
+        //        }
+
+        //        if (Hijos.Count > 0)
+        //        {
+        //            HijoSeleccionado = Hijos[0]; // Selecciona el primero por defecto
+        //        }
+        //    }
+        //}
+
         public async Task CargarHijosAsync()
         {
             // Asumimos que guardamos el FamiliaId al hacer login
@@ -42,10 +62,18 @@ namespace SemilleroGR3.ViewModels
 
                 if (Hijos.Count > 0)
                 {
-                    HijoSeleccionado = Hijos[0]; // Selecciona el primero por defecto
+                    // 1. Leemos el último ID que se guardó
+                    int idGuardado = Preferences.Get("HijoActivoId", 0);
+
+                    // 2. Buscamos si ese ID corresponde a algún hijo de la lista actual
+                    var hijoPrevio = Hijos.FirstOrDefault(h => h.Id == idGuardado);
+
+                    // 3. Si lo encontramos, lo seleccionamos. Si no hay nada guardado (o es la primera vez), seleccionamos el primero.
+                    HijoSeleccionado = hijoPrevio ?? Hijos[0];
                 }
             }
         }
+
 
         // Método que se dispara automáticamente cuando cambia 'HijoSeleccionado'
         partial void OnHijoSeleccionadoChanged(Alumno value)
