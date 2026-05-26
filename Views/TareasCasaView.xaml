@@ -33,13 +33,12 @@
                         </Grid>
 
                         <Entry Placeholder="Añadir comentario breve..." 
-                               Text="{Binding ComentarioBreve}" 
+                               Text="{Binding ComentarioBreve, Mode=TwoWay}" 
                                IsEnabled="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"
                                IsVisible="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"/>
 
-                        <Button Text="ENVIAR REPORTE" 
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TareasCasaViewModel}}, Path=MarcarComoRealizadaCommand}"
-                                CommandParameter="{Binding .}"
+                        <Button Text="ENVIAR REPORTE"
+                                Clicked="OnEnviarReporteClicked"
                                 CornerRadius="8"
                                 BackgroundColor="#4CAF50"
                                 TextColor="White"

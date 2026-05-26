@@ -15,7 +15,7 @@
             <VerticalStackLayout Spacing="0">
 
                 <!-- ── HEADER AZUL ────────────────────────────────────── -->
-                <Border BackgroundColor="#1A237E" StrokeThickness="0" Padding="18,22,18,26">
+                <Border BackgroundColor="#4b9839" StrokeThickness="0" Padding="18,22,18,26">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="0,0,20,20"/>
                     </Border.StrokeShape>
@@ -27,23 +27,23 @@
 
                         <!-- Tarjetas resumen -->
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,14,0,0">
-                            <Border Grid.Column="0" BackgroundColor="#FFFFFF20"
+                            <Border Grid.Column="0" BackgroundColor="#b9b9b9"
                                     StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="10">
                                 <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
                                     <Label Text="{Binding TotalEvaluaciones}" FontSize="24"
                                            FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
                                     <Label Text="Evaluaciones" FontSize="10"
-                                           TextColor="#C5CAE9" HorizontalOptions="Center"/>
+                                           TextColor="white" HorizontalOptions="Center"/>
                                 </VerticalStackLayout>
                             </Border>
-                            <Border Grid.Column="1" BackgroundColor="#FFFFFF20"
+                            <Border Grid.Column="1" BackgroundColor="#b9b9b9"
                                     StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="10">
                                 <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
                                     <Label Text="{Binding NivelGeneral}" FontSize="15"
                                            FontAttributes="Bold" TextColor="White"
                                            HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
                                     <Label Text="Nivel General" FontSize="10"
-                                           TextColor="#C5CAE9" HorizontalOptions="Center"/>
+                                           TextColor="White" HorizontalOptions="Center"/>
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>
@@ -60,7 +60,7 @@
                         <VerticalStackLayout Spacing="12">
 
                             <!-- Leyenda -->
-                            <FlexLayout Wrap="Wrap" JustifyContent="Start" Gap="6">
+                            <FlexLayout Wrap="Wrap" JustifyContent="Start" >
                                 <HorizontalStackLayout Spacing="4">
                                     <BoxView Color="#B71C1C" WidthRequest="10" HeightRequest="10" CornerRadius="5" VerticalOptions="Center"/>
                                     <Label Text="Iniciado" FontSize="11" TextColor="#424242"/>

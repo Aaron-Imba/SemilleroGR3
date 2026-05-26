@@ -40,7 +40,11 @@ namespace SemilleroGR3.ViewModels
                 Tareas.Clear();
                 foreach (var tarea in lista)
                 {
-                    Tareas.Add(tarea);
+                    // Mostrar sólo tareas que no estén ya realizadas o reportadas
+                    if (!tarea.Realizada && tarea.FechaReporte == null)
+                    {
+                        Tareas.Add(tarea);
+                    }
                 }
             }
         }
@@ -56,6 +60,7 @@ namespace SemilleroGR3.ViewModels
             if (exito)
             {
                 tarea.Realizada = true;
+                tarea.FechaReporte = DateTime.Now;
                 // Forzamos actualización visual (opcional dependiendo del Binding)
                 OnPropertyChanged(nameof(Tareas));
             }
