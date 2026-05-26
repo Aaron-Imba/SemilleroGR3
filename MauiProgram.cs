@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using SemilleroGR3.Services;
 using SemilleroGR3.ViewModels;
 using SemilleroGR3.Views;
-using CommunityToolkit.Maui; // Habilita el Toolkit correctamente
 
 namespace SemilleroGR3
 {
@@ -30,19 +30,21 @@ namespace SemilleroGR3
 
             // 2. Registrar ViewModels (Transient crea una nueva instancia cada vez que se requiere)
             builder.Services.AddTransient<LoginViewModel>();
-            builder.Services.AddTransient<DashboardViewModel>();
+            builder.Services.AddSingleton<DashboardViewModel>();
             builder.Services.AddTransient<PerfilHijoViewModel>();
             builder.Services.AddTransient<SeguimientoViewModel>();
             builder.Services.AddTransient<HistorialViewModel>();
             builder.Services.AddTransient<TareasCasaViewModel>();
+            builder.Services.AddTransient<ProgresoViewModel>();
 
             // 3. Registrar Views (Transient para que recarguen UI si es necesario)
             builder.Services.AddTransient<LoginView>();
-            builder.Services.AddTransient<DashboardView>();
+            builder.Services.AddSingleton<DashboardView>();
             builder.Services.AddTransient<PerfilHijoView>();
             builder.Services.AddTransient<SeguimientoView>();
             builder.Services.AddTransient<HistorialView>();
             builder.Services.AddTransient<TareasCasaView>();
+            builder.Services.AddTransient<ProgresoView>();
 
             return builder.Build();
         }

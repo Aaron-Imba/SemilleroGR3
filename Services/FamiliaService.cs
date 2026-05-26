@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SemilleroGR3.Models;
+using Microsoft.Maui.Networking; // Añadido para verificar conexión a internet
+using Microsoft.Maui.Storage;    // Añadido para guardar caché offline
+using SemilleroGR3.Helpers;
 
 namespace SemilleroGR3.Services
 {
@@ -12,6 +15,7 @@ namespace SemilleroGR3.Services
     {
         private readonly ApiClient _apiClient;
         private readonly JsonSerializerOptions _jsonOptions;
+        private static List<CriterioEvaluacionDto> _cacheProgreso;
 
         public FamiliaService(ApiClient apiClient)
         {
@@ -71,5 +75,61 @@ namespace SemilleroGR3.Services
             var response = await client.PutAsync($"tareas/{tareaId}/estado", content);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<List<CriterioEvaluacionDto>> GetProgresoHijoAsync(int alumnoId)
+        {
+            // 1. Validar conexión a internet
+            if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+            {
+                try
+                {
+                    var client = await _apiClient.GetClientAsync();
+
+                    // Llama al endpoint de tu FamiliaController en .NET 9
+                    var response = await client.GetAsync($"familia/progreso/{alumnoId}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var resultado = JsonSerializer.Deserialize<List<CriterioEvaluacionDto>>(content, _jsonOptions);
+
+                        if (resultado != null)
+                        {
+                            // Sincronizar Caché: Guardamos en memoria RAM y en disco local (Preferences)
+                            _cacheProgreso = resultado;
+                            Preferences.Default.Set($"{Constants.CacheEvaluacionesKey}{alumnoId}", content);
+                            return resultado;
+                        }
+                    }
+                }
+                catch
+                {
+                    // Tolerancia a fallos: Si la API local se cae, lee los datos locales
+                    return ObtenerProgresoDeCache(alumnoId);
+                }
+            }
+
+            // 2. Sin internet: Carga inmediata desde el almacenamiento offline
+            return ObtenerProgresoDeCache(alumnoId);
+        }
+
+        // Método auxiliar para extraer la caché de forma segura
+        private List<CriterioEvaluacionDto> ObtenerProgresoDeCache(int alumnoId)
+        {
+            if (_cacheProgreso != null) return _cacheProgreso;
+
+            string claveCache = $"{Constants.CacheEvaluacionesKey}{alumnoId}";
+            if (Preferences.Default.ContainsKey(claveCache))
+            {
+                string jsonString = Preferences.Default.Get(claveCache, string.Empty);
+                if (!string.IsNullOrEmpty(jsonString))
+                {
+                    return JsonSerializer.Deserialize<List<CriterioEvaluacionDto>>(jsonString, _jsonOptions) ?? new List<CriterioEvaluacionDto>();
+                }
+            }
+
+            return new List<CriterioEvaluacionDto>();
+        }
     }
 }
+

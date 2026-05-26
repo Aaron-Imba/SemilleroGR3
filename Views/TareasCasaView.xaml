@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:SemilleroGR3.ViewModels"
+             xmlns:controls="clr-namespace:SemilleroGR3.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="SemilleroGR3.Views.TareasCasaView"
              Title="Actividades en Casa">
@@ -12,41 +13,63 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <CollectionView ItemsSource="{Binding Tareas}" Margin="10">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Border StrokeThickness="1" 
-                        Stroke="#E0E0E0" 
-                        Margin="5,10" 
-                        BackgroundColor="White">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12"/>
-                    </Border.StrokeShape>
+    <Grid>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                           IsVisible="{Binding IsBusy}" 
+                           VerticalOptions="Center" 
+                           Color="#4CAF50" 
+                           ZIndex="1"/>
 
-                    <VerticalStackLayout Spacing="10" Padding="15">
-                        <Label Text="{Binding TituloActividad}" FontAttributes="Bold" FontSize="18"/>
-                        <Label Text="{Binding DescripcionActividad}" FontSize="14" TextColor="DarkGray"/>
+        <CollectionView ItemsSource="{Binding Tareas}" Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
 
-                        <Grid ColumnDefinitions="Auto, *" Margin="0,10,0,0">
-                            <CheckBox Grid.Column="0" IsChecked="{Binding Realizada}" Color="#2196F3"/>
-                            <Label Grid.Column="1" Text="Marcar como completada" VerticalOptions="Center"/>
-                        </Grid>
+                    <controls:CrochetBorderFrame>
+                        <VerticalStackLayout Spacing="12" Padding="5">
 
-                        <Entry Placeholder="Añadir comentario breve..." 
-                               Text="{Binding ComentarioBreve, Mode=TwoWay}" 
-                               IsEnabled="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"
-                               IsVisible="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"/>
+                            <Label Text="{Binding TituloActividad}" FontAttributes="Bold" FontSize="18" TextColor="#333333"/>
+                            <Label Text="{Binding DescripcionActividad}" FontSize="14" TextColor="DarkGray"/>
 
-                        <Button Text="ENVIAR REPORTE"
-                                Clicked="OnEnviarReporteClicked"
-                                CornerRadius="8"
-                                BackgroundColor="#4CAF50"
-                                TextColor="White"
-                                IsEnabled="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"
-                                IsVisible="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"/>
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+                            <Grid ColumnDefinitions="Auto, *" Margin="0,10,0,0" 
+                                  IsVisible="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}">
+                                <CheckBox Grid.Column="0" IsChecked="{Binding Realizada}" Color="#4CAF50"/>
+                                <Label Grid.Column="1" Text="Marcar como completada" VerticalOptions="Center" TextColor="#555555"/>
+                            </Grid>
+
+                            <Entry Placeholder="Añadir comentario breve..." 
+                                   Text="{Binding ComentarioBreve}" 
+                                   IsVisible="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                            <Button Text="ENVIAR REPORTE" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TareasCasaViewModel}}, Path=MarcarComoRealizadaCommand}"
+                                    CommandParameter="{Binding .}"
+                                    CornerRadius="8"
+                                    BackgroundColor="#4CAF50"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    IsVisible="{Binding Realizada, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                            <HorizontalStackLayout Spacing="5" 
+                                                   IsVisible="{Binding Realizada}" 
+                                                   Margin="0,10,0,0" 
+                                                   HorizontalOptions="Center">
+                                <Label Text="✅" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text="Tarea completada" FontSize="16" FontAttributes="Bold" TextColor="#4CAF50" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <Label Text="{Binding ComentarioBreve, StringFormat='&quot;{0}&quot;'}" 
+                                   IsVisible="{Binding Realizada}" 
+                                   FontSize="13" 
+                                   FontAttributes="Italic" 
+                                   TextColor="Gray" 
+                                   HorizontalOptions="Center"
+                                   Margin="0,5,0,0"/>
+
+                        </VerticalStackLayout>
+                    </controls:CrochetBorderFrame>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

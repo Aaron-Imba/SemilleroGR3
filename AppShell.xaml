@@ -3,8 +3,9 @@
     x:Class="SemilleroGR3.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:SemilleroGR3"
     xmlns:views="clr-namespace:SemilleroGR3.Views"
-    Title="Semillero Familia">
+    Title="SemilleroGR3">
 
     <ShellContent
         Title="Login"
@@ -16,21 +17,26 @@
 
     <TabBar Route="Dashboard">
 
-        <Tab Title="Inicio" Icon="pinguino_tejido.png">
+        <!--<Tab Title="Seguimiento" Icon="dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:SeguimientoView}" />
+        </Tab>-->
+
+        <Tab Title="Inicio" Icon="icon_home.png">
             <ShellContent ContentTemplate="{DataTemplate views:DashboardView}" />
         </Tab>
 
-        <Tab Title="Seguimiento" Icon="dotnet_bot.png">
-            <ShellContent ContentTemplate="{DataTemplate views:SeguimientoView}" />
-        </Tab>
-
-        <Tab Title="Historial" Icon="dotnet_bot.png">
+        <Tab Title="Historial" Icon="icon_history.png">
             <ShellContent ContentTemplate="{DataTemplate views:HistorialView}" />
         </Tab>
 
-        <Tab Title="Tareas" Icon="dotnet_bot.png">
+        <Tab Title="Tareas" Icon="icon_tasks.png">
             <ShellContent ContentTemplate="{DataTemplate views:TareasCasaView}" />
         </Tab>
+
+        <Tab Title="Progreso" Icon="icon_progress.png" Route="ProgresoView">
+            <ShellContent ContentTemplate="{DataTemplate views:ProgresoView}" />
+        </Tab>
+
 
     </TabBar>
 

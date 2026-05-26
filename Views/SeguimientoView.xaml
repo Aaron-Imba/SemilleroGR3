@@ -1,40 +1,64 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SemilleroGR3.Controls"
              x:Class="SemilleroGR3.Views.SeguimientoView"
              Title="Seguimiento">
 
     <Grid>
-        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="Center"/>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                           IsVisible="{Binding IsBusy}" 
+                           VerticalOptions="Center" 
+                           Color="#FFB6C1" 
+                           ZIndex="1"/>
 
         <CollectionView ItemsSource="{Binding Evaluaciones}" Margin="10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame CornerRadius="10" Margin="5,10" BackgroundColor="#FAFAFA" BorderColor="LightGray">
+
+                    <controls:CrochetBorderFrame>
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="{Binding FechaEvaluacion, StringFormat='Fecha: {0:dd/MM/yyyy}'}" FontAttributes="Bold" FontSize="16" />
-                            <Label Text="{Binding NotaGeneral, StringFormat='Nota General: {0}'}" FontSize="14" TextColor="Gray" Margin="0,0,0,10"/>
+
+                            <Label Text="{Binding FechaEvaluacion, StringFormat='Fecha: {0:dd/MM/yyyy}'}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="16" 
+                                   TextColor="#333333"/>
+
+                            <Label Text="{Binding NotaGeneral, StringFormat='Nota General: {0}'}" 
+                                   FontSize="14" 
+                                   TextColor="Gray" 
+                                   Margin="0,0,0,10"/>
 
                             <CollectionView ItemsSource="{Binding Detalles}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid ColumnDefinitions="*, Auto" Padding="5,10" Margin="0,5">
+
                                             <VerticalStackLayout Grid.Column="0">
                                                 <Label Text="{Binding CriterioNombre}" FontAttributes="Bold" FontSize="15"/>
                                                 <Label Text="{Binding ObservacionEspecifica}" FontSize="13" TextColor="DarkGray" />
                                             </VerticalStackLayout>
 
-                                            <Frame Grid.Column="1" BackgroundColor="#4CAF50" CornerRadius="8" Padding="10,5">
+                                            <Frame Grid.Column="1" 
+                                                   BackgroundColor="#4CAF50" 
+                                                   CornerRadius="8" 
+                                                   Padding="10,5"
+                                                   HasShadow="False"
+                                                   BorderColor="Transparent">
                                                 <Label Text="{Binding NivelNombre}" TextColor="White" FontAttributes="Bold" VerticalOptions="Center"/>
                                             </Frame>
+
                                         </Grid>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+
                         </VerticalStackLayout>
-                    </Frame>
+                    </controls:CrochetBorderFrame>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </Grid>
+
 </ContentPage>
